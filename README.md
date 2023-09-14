@@ -1,1 +1,1 @@
-# tic-tac-toe
+This mini-project is a tic-tac-toe game to help practice with objects, factory functions, the module pattern, and organizing my code in javascript.

@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.title {
+    position: absolute;
+    top: calc(calc(100vh - min(80vh, 80vw)) / 4);
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+.container {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: min(80vh, 80vw);
+    width: min(80vh, 80vw);
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(min(80vh, 80vw) / 4);
+}
+
+.result {
+    position: absolute;
+    bottom: calc(calc(100vh - min(80vh, 80vw)) / 4);
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
