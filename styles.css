@@ -17,11 +17,31 @@ h1 {
     font-size: min(5vh, 5vw);
 }
 
-.title {
+.header {
     display: flex;
     align-items: center;
     text-align: center;
     gap: 32px;
+}
+
+button {
+    padding: 16px;
+    border: none;
+    border-radius: 32px;
+    color: white;
+    cursor: pointer;
+}
+
+.player1btn {
+    background-color: blue;
+}
+
+.player2btn {
+    background-color: red;
+}
+
+.restartbtn {
+    background-color: green;
 }
 
 .grid {
@@ -39,7 +59,7 @@ h1 {
     font-size: calc(min(80vh, 80vw) / 4);
 }
 
-.result {
+.footer {
     display: flex;
     align-items: center;
     gap: 32px;
