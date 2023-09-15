@@ -1,10 +1,10 @@
 const ticTacToe = (function () {
 
-    const container = document.querySelector('.container');
+    const grid = document.querySelector('.grid');
     const result = document.querySelector('.result');
 
     function render(board) {
-        container.replaceChildren();
+        grid.replaceChildren();
         for (let row = 0; row < board.length; row++) {
             for (let col = 0; col < board[0].length; col++) {
                 const square = document.createElement('div');
@@ -19,7 +19,7 @@ const ticTacToe = (function () {
                 square.dataset.row = row;
                 square.dataset.col = col;
                 square.addEventListener('click', gameBoard.markBoard);
-                container.appendChild(square);
+                grid.appendChild(square);
             }
         }
     }
