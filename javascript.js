@@ -2,6 +2,27 @@ const ticTacToe = (function () {
 
     const grid = document.querySelector('.grid');
     const result = document.querySelector('.result');
+    const player1Btn = document.querySelector('.player1btn');
+    const player2Btn = document.querySelector('.player2btn');
+    const restartBtn = document.querySelector('.restartbtn');
+
+    player1Btn.addEventListener('click', setPlayerName);
+    player2Btn.addEventListener('click', setPlayerName);
+
+    const playerFactory = (name, mark) => {
+        return { name, mark };
+    }
+
+    const player1 = playerFactory('Player 1', 'X');
+    const player2 = playerFactory('Player 2', 'O');
+
+    function setPlayerName(event) {
+        const targetList = event.target.textContent.split(' ');
+        const target = `${targetList[1]} ${targetList[2]}`;
+        const name = prompt(`What is ${target} name?`);
+        const player = target === "Player 1's" ? player1 : player2;
+        player.name = name;
+    }
 
     function render(board) {
         grid.replaceChildren();
@@ -31,13 +52,12 @@ const ticTacToe = (function () {
         function createBoard() {
             board = [['', '', ''], ['', '', ''], ['', '', '']];
             render(board);
-            gameController.resetTurnCount();
         };
 
         function markBoard(event) {
             const row = event.target.dataset.row;
             const col = event.target.dataset.col;
-            if (!board[row][col]) {
+            if (!gameController.getGameOver() && !board[row][col]) {
                 board[row][col] = gameController.getTurnPlayer().mark;
                 render(board);
                 gameController.checkForGameOver(row, col);
@@ -52,73 +72,71 @@ const ticTacToe = (function () {
         return { createBoard, markBoard, getBoard };
     })();
 
-    const playerFactory = (name, mark) => {
-        return { name, mark };
-    }
+    const gameController = (function (player1, player2) {
 
-    const player = playerFactory('Player', 'X');
-    const computer = playerFactory('Computer', 'O');
-
-    const gameController = (function (player, computer) {
-
+        let gameOver = false;
         let turnCount = 0;
 
-        function getTurnCount() {
-            return turnCount;
+        function getGameOver() {
+            return gameOver;
         }
 
         function getTurnPlayer() {
-            return turnCount % 2 === 0 ? player : computer;
+            return turnCount % 2 === 0 ? player1 : player2;
+        }
+
+        function checkForGameOver(row, col) {
+            const board = gameBoard.getBoard();
+            const player = getTurnPlayer();
+            let thereIsAWinner = false;
+            if (board[row][0] === player.mark &&
+                board[row][1] === player.mark &&
+                board[row][2] === player.mark) {
+                thereIsAWinner = true;
+            }
+            if (board[0][col] === player.mark &&
+                board[1][col] === player.mark &&
+                board[2][col] === player.mark) {
+                thereIsAWinner = true;
+            }
+            if (row === col &&
+                board[0][0] === player.mark &&
+                board[1][1] === player.mark &&
+                board[2][2] === player.mark) {
+                thereIsAWinner = true;
+            }
+            if ((Math.abs(col - row) === 2 || row === 1 && col === 1) &&
+                board[0][2] === player.mark &&
+                board[1][1] === player.mark &&
+                board[2][0] === player.mark) {
+                thereIsAWinner = true;
+            }
+            if (thereIsAWinner) {
+                result.textContent = `${player.name} wins!`;
+                gameOver = true;
+            } else if (turnCount === 8) {
+                result.textContent = 'The game ends in a tie!';
+                gameOver = true;
+            }
         }
 
         function incrementTurnCount() {
             turnCount++;
         }
 
-        function resetTurnCount() {
+        function startNewGame() {
+            gameOver = false;
             turnCount = 0;
-        }
-
-        function checkForGameOver(row, col) {
-            const board = gameBoard.getBoard();
-            const player = gameController.getTurnPlayer();
-            let noWinner = true;
-            if (board[row][0] === player.mark &&
-                board[row][1] === player.mark &&
-                board[row][2] === player.mark) {
-                noWinner = false;
-            }
-            if (board[0][col] === player.mark &&
-                board[1][col] === player.mark &&
-                board[2][col] === player.mark) {
-                noWinner = false;
-            }
-            if (row === col) {
-                if (board[0][0] === player.mark &&
-                    board[1][1] === player.mark &&
-                    board[2][2] === player.mark) {
-                    noWinner = false;
-                }
-            }
-            if (Math.abs(col - row) === 2 || row === 1 && col === 1) {
-                if (board[0][2] === player.mark &&
-                    board[1][1] === player.mark &&
-                    board[2][0] === player.mark) {
-                    noWinner = false;
-                }
-            }
-            if (!noWinner) {
-                result.textContent = `${player.name} wins!`;
-            } else if (gameController.getTurnCount() === 8) {
-                result.textContent = 'The game ends in a tie!';
-            }
+            gameBoard.createBoard();
+            result.textContent = 'No Winner yet...';
         }
 
         return {
-            getTurnCount, getTurnPlayer, incrementTurnCount,
-            resetTurnCount, checkForGameOver
+            getGameOver, getTurnPlayer, checkForGameOver,
+            incrementTurnCount, startNewGame
         };
-    })(player, computer);
+    })(player1, player2);
 
-    gameBoard.createBoard();
+    restartBtn.addEventListener('click', gameController.startNewGame);
+    gameController.startNewGame();
 })();

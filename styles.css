@@ -9,12 +9,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    gap: 8px;
     height: 100vh;
     width: 100vw;
-}
-
-h1 {
-    font-size: min(5vh, 5vw);
 }
 
 .header {
